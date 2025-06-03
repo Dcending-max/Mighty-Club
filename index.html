@@ -3,17 +3,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mighty Club</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Mighty Chat</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <div class="hero">
-        <h1>Welcome to Mighty Club</h1>
-        <p>Gaming. Movies. Superheroes. Join the future.</p>
-        <a href="join.html" class="btn">Join Us</a>
-        <a href="chat/index.html" class="btn">Chat</a>
-        <a href="events/index.html" class="btn">Events</a>
+        <h2>Mighty Club Chat</h2>
+        <div id="messages" style="max-height: 300px; overflow-y: auto;"></div>
+        <input type="text" id="msg" placeholder="Type a message">
+        <button onclick="send()">Send</button>
     </div>
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        function renderMessages() {
+            messagesDiv.innerHTML = '';
+            const msgs = JSON.parse(localStorage.getItem('chat') || '[]');
+            msgs.forEach(m => {
+                const div = document.createElement('div');
+                div.textContent = `${m.user}: ${m.text}`;
+                messagesDiv.appendChild(div);
+            });
+        }
+        function send() {
+            const input = document.getElementById('msg');
+            const user = JSON.parse(localStorage.getItem('user')) || { username: 'Guest' };
+            const msgs = JSON.parse(localStorage.getItem('chat') || '[]');
+            msgs.push({ user: user.username, text: input.value });
+            localStorage.setItem('chat', JSON.stringify(msgs));
+            input.value = '';
+            renderMessages();
+        }
+        renderMessages();
+    </script>
 </body>
 </html>
